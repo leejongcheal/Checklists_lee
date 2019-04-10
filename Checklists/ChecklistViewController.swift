@@ -7,8 +7,8 @@
 //
 
 import UIKit
-
-class ChecklistViewController: UITableViewController {
+// include protocol
+class ChecklistViewController: UITableViewController, AddItemViewControllerDelegate{
     
     var items = [ChecklistItem]()
     /* Initialization */
@@ -106,4 +106,28 @@ class ChecklistViewController: UITableViewController {
         
     }
     
+    // MARK:- Add Item ViewController Delegates
+    func addItemViewControllerDidCancel(_ controller: AddItemViewController) {
+        navigationController?.popViewController(animated:true)
+    }
+    
+    func addItemViewController(_ controller: AddItemViewController, didFinishAdding item: ChecklistItem) {
+        let newRowIndex = items.count
+        items.append(item)
+        
+        let indexPath = IndexPath(row: newRowIndex, section: 0)
+        let indexPaths = [indexPath]
+        tableView.insertRows(at: indexPaths, with: .automatic)
+        
+        navigationController?.popViewController(animated:true)
+    }
+    
+    // MARK:- Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "AddItem" {
+            let controller = segue.destination as! AddItemViewController
+            controller.delegate = self
+        }
+    }
+
 }
