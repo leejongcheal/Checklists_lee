@@ -71,12 +71,16 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Name of the Item" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RTZ-an-qod">
+                                                <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Name of the Item" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="RTZ-an-qod">
                                                     <rect key="frame" x="16" y="6" width="288" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                                    <connections>
+                                                        <action selector="done" destination="flu-uI-lxp" eventType="editingDidEndOnExit" id="lAi-Xb-3KE"/>
+                                                        <outlet property="delegate" destination="flu-uI-lxp" id="6Ke-vo-TUh"/>
+                                                    </connections>
                                                 </textField>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -96,7 +100,7 @@
                                 <action selector="cancel" destination="flu-uI-lxp" id="1CB-mx-Wzs"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="xpI-xg-BYt">
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" systemItem="done" id="xpI-xg-BYt">
                             <connections>
                                 <action selector="done" destination="flu-uI-lxp" id="lam-5J-IMQ"/>
                             </connections>
@@ -104,6 +108,7 @@
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="doneBarButton" destination="xpI-xg-BYt" id="2LX-dY-c5b"/>
                         <outlet property="textField" destination="RTZ-an-qod" id="nrG-lJ-E7a"/>
                     </connections>
                 </tableViewController>
