@@ -12,6 +12,8 @@ import UIKit
 protocol AddItemViewControllerDelegate: class {
     func addItemViewControllerDidCancel(_ controller: AddItemViewController)
     func addItemViewController(_ controller: AddItemViewController, didFinishAdding item: ChecklistItem)
+    /* For editing */
+    func addItemViewController(_ controller: AddItemViewController, didFinishEditing item: ChecklistItem)
 }
 
 class AddItemViewController: UITableViewController,UITextFieldDelegate {
@@ -21,12 +23,16 @@ class AddItemViewController: UITableViewController,UITextFieldDelegate {
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
     
     weak var delegate: AddItemViewControllerDelegate?
-    
+    var itemToEdit: ChecklistItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        if let itemToEdit = itemToEdit {
+            title = "Edit Item"
+            textField.text = itemToEdit.text
+            doneBarButton.isEnabled = true
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) { //  뷰에 바로 키보드 칸 올라가게 하는 함수
@@ -42,15 +48,22 @@ class AddItemViewController: UITableViewController,UITextFieldDelegate {
     }
     
     @IBAction func done() {
-        print("Contents of the text field: \(textField.text!)")
+      //  print("Contents of the text field: \(textField.text!)")
+        
+        if let itemToEdit = itemToEdit {
+            itemToEdit.text = textField.text!
+            delegate?.addItemViewController(self, didFinishEditing: itemToEdit)
+            
+        } else {
         let item = ChecklistItem()
         item.text = textField.text!
         
         delegate?.addItemViewController(self, didFinishAdding: item)
         
         //navigationController?.popViewController(animated: true)
-    }
+        }
     
+    }
     
     // MARK:- Table View Delegates
     override func tableView(_ tableView: UITableView,
