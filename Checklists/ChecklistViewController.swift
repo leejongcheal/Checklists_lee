@@ -14,7 +14,7 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
     /* Initialization */
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        /*
         let item1 = ChecklistItem()
         item1.text = "Walk the dog"
         items.append(item1)
@@ -36,7 +36,33 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
         let item5 = ChecklistItem()
         item5.text = "Eat ice cream"
         items.append(item5)
+ */
+        loadChecklistItems()
     }
+    
+    /* Saving the file */
+    func saveChecklistItems() {
+        let encoder = PropertyListEncoder()
+        do {
+            let data = try encoder.encode(items)
+            try data.write(to: dataFilePath(), options: Data.WritingOptions.atomic)
+        } catch {
+            print("Error encoding item array: \(error.localizedDescription)")
+        }
+    }
+    /* Loading the file */
+    func loadChecklistItems() {
+        let path = dataFilePath()
+        if let data = try? Data(contentsOf: path) {
+            let decoder = PropertyListDecoder()
+            do {
+                items = try decoder.decode([ChecklistItem].self, from: data)
+            } catch {
+                print("Error decoding item array: \(error.localizedDescription)")
+            }
+        }
+    }
+    
     
     func configureCheckmark(for cell: UITableViewCell, with item: ChecklistItem) {
         
@@ -67,6 +93,16 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
         tableView.insertRows(at: indexPaths, with: .automatic)
         
     }
+    /* File I/O */
+    func documentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
+    }
+    
+    func dataFilePath() -> URL {
+        return documentsDirectory().appendingPathComponent("Checklists.plist")
+    }
+    
     
     /* delete Row */
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle,
@@ -75,6 +111,8 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
         
         let indexPaths = [indexPath]
         tableView.deleteRows(at: indexPaths, with: .automatic)
+        /* Save data */
+        saveChecklistItems()
     }
     
     // MARK:- Table View Data Source
@@ -107,6 +145,8 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
         }
         
         tableView.deselectRow(at: indexPath, animated: true)
+        /* Save data */
+        saveChecklistItems()
         
     }
     
@@ -124,6 +164,9 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
         tableView.insertRows(at: indexPaths, with: .automatic)
         
         navigationController?.popViewController(animated:true)
+        /* Save data */
+        saveChecklistItems()
+        
     }
     
     
@@ -135,6 +178,8 @@ class ChecklistViewController: UITableViewController, ItemDetailViewControllerDe
             }
         }
         navigationController?.popViewController(animated:true)
+        /* Save data */
+        saveChecklistItems()
     }
 
     
