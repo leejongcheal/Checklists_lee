@@ -2,8 +2,8 @@
 //  AllListsViewController.swift
 //  Checklists
 //
-//  Created by 캡디 on 11/04/2019.
-//  Copyright © 2019 lee. All rights reserved.
+//  Created by Myoung-Wan Koo on 06/04/2019.
+//  Copyright © 2019 Myoung-Wan Koo. All rights reserved.
 //
 
 import UIKit
@@ -11,16 +11,27 @@ import UIKit
 class AllListsViewController: UITableViewController {
     /* Cell id */
     let cellIdentifier = "ChecklistCell"
+    var lists = [Checklist]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+        /* Dummy data */
+        // Add placeholder data
+        var list = Checklist(name: "Birthdays")
+        lists.append(list)
         
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        list = Checklist(name: "Groceries")
+        lists.append(list)
+        
+        list = Checklist(name: "Cool Apps")
+        lists.append(list)
+        
+        list = Checklist(name: "To Do")
+        lists.append(list)
+        
+        
     }
     
     // MARK: - Table view data source
@@ -32,7 +43,7 @@ class AllListsViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 3
+        return lists.count
     }
     
     
@@ -40,13 +51,26 @@ class AllListsViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
         
         // Configure the cell...
-        cell.textLabel!.text="List\(indexPath.row)"
+        let checklist = lists[indexPath.row]
+        cell.textLabel!.text = checklist.name
+        cell.accessoryType = .detailDisclosureButton
         return cell
     }
     
     /* didSelectRowAt */
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "ShowChecklist", sender: nil)
+        /* Send checklit into ShowChecklist id Segue */
+        let checklist = lists[indexPath.row]
+        performSegue(withIdentifier: "ShowChecklist", sender: checklist)
+        
+    }
+    
+    // MARK:- Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowChecklist" {
+            let controller = segue.destination as! ChecklistViewController
+            controller.checklist = sender as? Checklist
+        }
     }
     
 }
